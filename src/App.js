@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
 
-function App() {
+const App = () => {
+  const [oligos, setOligos] = useState([])
+  const [newOligo, setNewOligo] = useState("Enter oligonucleotid")
+
+  const addOligo = (event) => {
+    event.preventDefault()
+    const oligoObject = {
+      id: oligos.length + 1,
+      sequence: newOligo,
+    }
+
+    setOligos(oligos.concat(oligoObject))
+    setNewOligo("Enter oligonucleotid")
+
+  }
+  
+  const handleOligoChange = (event) => {
+    console.log(event.target.value)
+    setNewOligo(event.target.value)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Oligos</h1>
+      <ul>
+        {oligos.map(oligo => 
+          <li key={oligo.id}>{oligo.sequence}</li>
+        )}
+      </ul>
+      <form onSubmit={addOligo}>
+        <input value={newOligo} onChange={handleOligoChange}/>
+        <button type="submit">save</button>
+      </form>
     </div>
-  );
+  )
 }
 
 export default App;
