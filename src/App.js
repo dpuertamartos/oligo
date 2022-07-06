@@ -1,5 +1,28 @@
 import { useState } from 'react'
 
+const Oligo = ({oligo}) => <li>{oligo.sequence}</li>
+
+const Oligos = ({oligosToShow}) => {return (
+  <ul>
+    {oligosToShow.map(oligo => 
+      <Oligo key={oligo.id} oligo={oligo} />
+    )}
+  </ul>
+)}
+
+const AddOligoForm = ({onSubmit,ipValue,ipOnChange}) => {
+  return( 
+  <form onSubmit={onSubmit}>
+    <input value={ipValue} onChange={ipOnChange}/>
+    <button type="submit">save</button>
+  </form>
+  )
+}
+
+const Filter = ({ipValue, ipOnChange}) => 
+<input value={ipValue} onChange={ipOnChange}/>
+
+
 const App = () => {
   const [oligos, setOligos] = useState([
     { id: 1, sequence: "ATTAGC" },
@@ -9,7 +32,7 @@ const App = () => {
   ])
   const [newOligo, setNewOligo] = useState("Enter oligonucleotid")
   const [showAll, setShowAll] = useState(true)
-  const [newSearch, setNewSearch] = useState("Search oligo")
+  const [newSearch, setNewSearch] = useState("Search sequence")
 
   const addOligo = (event) => {
     event.preventDefault()
@@ -40,19 +63,12 @@ const App = () => {
   return (
     <div>
       <h1>Oligos</h1>
-      <input value={newSearch} onChange={handleSearchChange}/>
+      <Filter ipValue={newSearch} ipOnChange={handleSearchChange}/>
       <button onClick={() => setShowAll(!showAll)}>
-        {showAll ? 'filter mode' : 'show all'}
+        {showAll ? 'filter OFF, click to activate' : 'FILTER ON, click to deactivate'}
       </button>
-      <ul>
-        {oligosToShow.map(oligo => 
-          <li key={oligo.id}>{oligo.sequence}</li>
-        )}
-      </ul>
-      <form onSubmit={addOligo}>
-        <input value={newOligo} onChange={handleOligoChange}/>
-        <button type="submit">save</button>
-      </form>
+      <Oligos oligosToShow = {oligosToShow} />
+      <AddOligoForm onSubmit={addOligo} ipValue={newOligo} ipOnChange={handleOligoChange}/>
     </div>
   )
 }
