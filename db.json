@@ -1,16 +1,12 @@
 {
   "oligos": [
     {
-      "id": 6,
-      "sequence": "AAGGTTGG"
+      "id": 1,
+      "sequence": "AATTGG"
     },
     {
-      "id": 7,
-      "sequence": "TTGGAAGGC"
-    },
-    {
-      "id": 8,
-      "sequence": "AAGG"
+      "id": 2,
+      "sequence": "AAAGG"
     }
   ]
 }
