@@ -2,7 +2,7 @@ import { useState } from 'react'
 import React from 'react'
 import EditForm from './EditForm'
 
-const Oligo = ({oligo, editOligo}) => {
+const Oligo = ({oligo, editOligo, deleteOligo}) => {
     const [newEdit, setNewEdit] = useState(oligo.sequence)
     const [showEdit, setNewShowEdit] = useState(false)
 
@@ -17,7 +17,7 @@ const Oligo = ({oligo, editOligo}) => {
 
 
     return(
-        <li>{oligo.sequence}<button onClick={()=>setNewShowEdit(!showEdit)}>EDIT</button>
+        <li>{oligo.sequence}<button onClick={()=>setNewShowEdit(!showEdit)}>EDIT</button><button onClick={()=>deleteOligo(oligo.id)}>DELETE</button>
             {showEdit 
                 ? <EditForm onSubmit={changeOligo} ipValue={newEdit} ipOnChange={handleEditChange} /> 
                 : <span></span> }

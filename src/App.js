@@ -23,7 +23,7 @@ const App = () => {
   const addOligo = (event) => {
     event.preventDefault()
     const oligoObject = {
-      id: oligos.length + 1,
+      id: oligos[oligos.length-1].id + 1,
       sequence: newOligo,
     }
 
@@ -49,6 +49,19 @@ const App = () => {
         setOligos(oligos.filter(n=>n.id !== id))
       })
   }
+
+  const deleteOligo = id => {
+    const oligo = oligos.find(o => o.id === id)
+    if(window.confirm(`do you want delete oligo with ID: ${id} and sequence: ${oligo.sequence}?`)){
+      oligoService
+        .remove(id)
+        .then(()=>setOligos(oligos.filter(n => n.id !== id)))
+        .catch(error => {
+          alert(`oligo '${oligo.sequence} was already deleted from server`)
+          setOligos(oligos.filter(n=>n.id !== id))
+        })
+    }
+  }
   
   const handleOligoChange = (event) => {
     console.log(event.target.value)
@@ -73,7 +86,7 @@ const App = () => {
       <button onClick={() => setShowAll(!showAll)}>
         {showAll ? 'filter OFF, click to activate' : 'FILTER ON, click to deactivate'}
       </button>
-      <Oligos oligosToShow = {oligosToShow} editOligo ={updateOligo} />
+      <Oligos oligosToShow = {oligosToShow} editOligo ={updateOligo} deleteOligo = {deleteOligo} />
       <AddOligoForm onSubmit={addOligo} ipValue={newOligo} ipOnChange={handleOligoChange}/>
     </div>
   )
