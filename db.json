@@ -1,0 +1,24 @@
+{
+  "oligos": [
+    {
+      "id": 1,
+      "sequence": "AATTGGAGCGA"
+    },
+    {
+      "id": 2,
+      "sequence": "TTGGGAAAGCA"
+    },
+    {
+      "id": 3,
+      "sequence": "GGTTAATTGGCC"
+    },
+    {
+      "id": 4,
+      "sequence": "AAAGGTTAAGG"
+    },
+    {
+      "id": 5,
+      "sequence": "AAAGGGG"
+    }
+  ]
+}

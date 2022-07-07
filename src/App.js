@@ -1,38 +1,22 @@
-import { useState } from 'react'
-
-const Oligo = ({oligo}) => <li>{oligo.sequence}</li>
-
-const Oligos = ({oligosToShow}) => {return (
-  <ul>
-    {oligosToShow.map(oligo => 
-      <Oligo key={oligo.id} oligo={oligo} />
-    )}
-  </ul>
-)}
-
-const AddOligoForm = ({onSubmit,ipValue,ipOnChange}) => {
-  return( 
-  <form onSubmit={onSubmit}>
-    <input value={ipValue} onChange={ipOnChange}/>
-    <button type="submit">save</button>
-  </form>
-  )
-}
-
-const Filter = ({ipValue, ipOnChange}) => 
-<input value={ipValue} onChange={ipOnChange}/>
-
+import { useState, useEffect } from 'react'
+import oligoService from './services/oligos'
+import Oligos from './components/Oligos'
+import Filter from './components/Filter'
+import AddOligoForm from './components/AddOligoForm'
 
 const App = () => {
-  const [oligos, setOligos] = useState([
-    { id: 1, sequence: "ATTAGC" },
-    { id: 2, sequence: "GCGCAA"  },
-    { id: 3, sequence: "TTAAGG"  },
-    { id: 4, sequence: "CCATGG"  }
-  ])
+  const [oligos, setOligos] = useState([])
   const [newOligo, setNewOligo] = useState("Enter oligonucleotid")
   const [showAll, setShowAll] = useState(true)
   const [newSearch, setNewSearch] = useState("Search sequence")
+
+  useEffect(() => {
+    oligoService
+      .getAll()
+      .then(initialOligos => {
+        setOligos(initialOligos)
+      })
+  }, [])
 
   const addOligo = (event) => {
     event.preventDefault()
@@ -41,9 +25,12 @@ const App = () => {
       sequence: newOligo,
     }
 
-    setOligos(oligos.concat(oligoObject))
-    setNewOligo("Enter oligonucleotid")
-
+    oligoService
+      .create(oligoObject)
+      .then(returnedOligo => {
+        setOligos(oligos.concat(returnedOligo))
+        setNewOligo("Enter oligonucleotid")
+      })
   }
   
   const handleOligoChange = (event) => {
