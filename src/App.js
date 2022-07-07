@@ -4,11 +4,13 @@ import Oligos from './components/Oligos'
 import Filter from './components/Filter'
 import AddOligoForm from './components/AddOligoForm'
 
+
 const App = () => {
   const [oligos, setOligos] = useState([])
   const [newOligo, setNewOligo] = useState("Enter oligonucleotid")
   const [showAll, setShowAll] = useState(true)
   const [newSearch, setNewSearch] = useState("Search sequence")
+  
 
   useEffect(() => {
     oligoService
@@ -32,6 +34,21 @@ const App = () => {
         setNewOligo("Enter oligonucleotid")
       })
   }
+
+  const updateOligo = (id, newsequence) => {
+    const oligo = oligos.find(o => o.id === id)
+    const changedOligo = {...oligo, sequence: newsequence}
+
+    oligoService
+      .update(id, changedOligo)
+      .then(returnedOligo =>{
+        setOligos(oligos.map(oligo => oligo.id !== id ? oligo : returnedOligo))
+      })
+      .catch(error => {
+        alert(`oligo '${oligo.sequence} was already deleted from server`)
+        setOligos(oligos.filter(n=>n.id !== id))
+      })
+  }
   
   const handleOligoChange = (event) => {
     console.log(event.target.value)
@@ -42,6 +59,8 @@ const App = () => {
     console.log(event.target.value)
     setNewSearch(event.target.value.toUpperCase())
   }
+
+  
 
   const oligosToShow = showAll
     ? oligos
@@ -54,7 +73,7 @@ const App = () => {
       <button onClick={() => setShowAll(!showAll)}>
         {showAll ? 'filter OFF, click to activate' : 'FILTER ON, click to deactivate'}
       </button>
-      <Oligos oligosToShow = {oligosToShow} />
+      <Oligos oligosToShow = {oligosToShow} editOligo ={updateOligo} />
       <AddOligoForm onSubmit={addOligo} ipValue={newOligo} ipOnChange={handleOligoChange}/>
     </div>
   )
