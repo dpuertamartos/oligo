@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import oligoService from './services/oligos'
+import loginService from './services/login'
 import Oligos from './components/Oligos'
 import Filter from './components/Filter'
 import AddOligoForm from './components/AddOligoForm'
@@ -12,6 +13,9 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
   const [newSearch, setNewSearch] = useState("Search sequence")
   const [errorMessage, setErrorMessage] = useState(null)
+  const [username, setUsername] = useState('') 
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
   
 
   useEffect(() => {
@@ -20,6 +24,15 @@ const App = () => {
       .then(initialOligos => {
         setOligos(initialOligos)
       })
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      oligoService.setToken(user.token)
+    }
   }, [])
 
   const addOligo = (event) => {
@@ -101,22 +114,71 @@ const App = () => {
     setNewSearch(event.target.value.toUpperCase())
   }
 
-  
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      ) 
+      oligoService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      setErrorMessage(['Wrong credentials',"error"])
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
 
   const oligosToShow = showAll
     ? oligos
     : oligos.filter(oligo=>oligo.sequence.includes(newSearch) )
 
+  
+  const loginForm = () => (
+    <form onSubmit={handleLogin}>
+      <div>
+        username
+          <input
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
+        />
+      </div>
+      <div>
+        password
+          <input
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
+        />
+      </div>
+      <button type="submit">login</button>
+    </form>      
+  )
+
+  const oligoForm = () => <AddOligoForm onSubmit={addOligo} ipValue={newOligo} ipOnChange={handleOligoChange}/>
+
   return (
     <div>
       <h1>Oligos</h1>
       <Notification message={errorMessage} />
+      {user === null && loginForm()}
       <Filter ipValue={newSearch} ipOnChange={handleSearchChange}/>
       <button onClick={() => setShowAll(!showAll)}>
         {showAll ? 'filter OFF, click to activate' : 'FILTER ON, click to deactivate'}
       </button>
       <Oligos oligosToShow = {oligosToShow} editOligo ={updateOligo} deleteOligo = {deleteOligo} />
-      <AddOligoForm onSubmit={addOligo} ipValue={newOligo} ipOnChange={handleOligoChange}/>
+      {user !== null && oligoForm() }
+      {user !== null && <div>{user.name} logged-in</div>}
     </div>
   )
 }
