@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import oligoService from './services/oligos'
 import loginService from './services/login'
 import Oligos from './components/Oligos'
@@ -11,7 +11,6 @@ import Notification from './components/Notification'
 
 const App = () => {
   const [oligos, setOligos] = useState([])
-  const [newOligo, setNewOligo] = useState("Enter oligonucleotid")
   const [showAll, setShowAll] = useState(true)
   const [newSearch, setNewSearch] = useState("Search sequence")
   const [errorMessage, setErrorMessage] = useState(null)
@@ -19,7 +18,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   
-
   useEffect(() => {
     oligoService
       .getAll()
@@ -37,23 +35,12 @@ const App = () => {
     }
   }, [])
 
-  const addOligo = (event) => {
-    event.preventDefault()
-    let new_id = 1
-    oligos.length === 0
-      ? new_id = 1
-      : new_id = oligos[oligos.length-1].id + 1
-
-    const oligoObject = {
-      id: new_id,
-      sequence: newOligo,
-    }
-
+  const addOligo = (oligoObject) => {
+    oligoFormRef.current.toggleVisibility()
     oligoService
       .create(oligoObject)
       .then(returnedOligo => {
         setOligos(oligos.concat(returnedOligo))
-        setNewOligo("Enter oligonucleotid")
         setErrorMessage(
           [`oligo ${oligoObject.sequence} was added to server`,"confirmation"]
         )
@@ -106,10 +93,7 @@ const App = () => {
     }
   }
   
-  const handleOligoChange = (event) => {
-    console.log(event.target.value)
-    setNewOligo(event.target.value.toUpperCase())
-  }
+  
 
   const handleSearchChange = (event) => {
     console.log(event.target.value)
@@ -142,6 +126,8 @@ const App = () => {
     ? oligos
     : oligos.filter(oligo=>oligo.sequence.includes(newSearch) )
 
+  const oligoFormRef = useRef()
+
   return (
     <div>
       <h1>Oligos</h1>
@@ -163,11 +149,9 @@ const App = () => {
       </button>
       <Oligos oligosToShow = {oligosToShow} editOligo ={updateOligo} deleteOligo = {deleteOligo} />
       {user !== null &&
-      <Togglable buttonLabel="new oligo">
+      <Togglable buttonLabel="new oligo" ref={oligoFormRef}>
         <AddOligoForm
-          onSubmit={addOligo}
-          value={newOligo}
-          handleChange={handleOligoChange}
+          createOligo={addOligo}
         />
       </Togglable>
       }
