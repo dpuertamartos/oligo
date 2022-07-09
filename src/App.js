@@ -4,6 +4,8 @@ import loginService from './services/login'
 import Oligos from './components/Oligos'
 import Filter from './components/Filter'
 import AddOligoForm from './components/AddOligoForm'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 
 
@@ -140,44 +142,35 @@ const App = () => {
     ? oligos
     : oligos.filter(oligo=>oligo.sequence.includes(newSearch) )
 
-  
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>      
-  )
-
-  const oligoForm = () => <AddOligoForm onSubmit={addOligo} ipValue={newOligo} ipOnChange={handleOligoChange}/>
-
   return (
     <div>
       <h1>Oligos</h1>
       <Notification message={errorMessage} />
-      {user === null && loginForm()}
+      {user === null && 
+      <Togglable buttonLabel='login'>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleLogin}
+        />
+      </Togglable>
+      }
       <Filter ipValue={newSearch} ipOnChange={handleSearchChange}/>
       <button onClick={() => setShowAll(!showAll)}>
         {showAll ? 'filter OFF, click to activate' : 'FILTER ON, click to deactivate'}
       </button>
       <Oligos oligosToShow = {oligosToShow} editOligo ={updateOligo} deleteOligo = {deleteOligo} />
-      {user !== null && oligoForm() }
+      {user !== null &&
+      <Togglable buttonLabel="new oligo">
+        <AddOligoForm
+          onSubmit={addOligo}
+          value={newOligo}
+          handleChange={handleOligoChange}
+        />
+      </Togglable>
+      }
       {user !== null && <div>{user.name} logged-in</div>}
     </div>
   )
