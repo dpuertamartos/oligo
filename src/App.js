@@ -3,6 +3,7 @@ import oligoService from './services/oligos'
 import loginService from './services/login'
 import Oligos from './components/Oligos'
 import Genes from './components/Genes'
+import Plasmids from './components/Plasmids'
 import Filter from './components/Filter'
 import AddOligoForm from './components/AddOligoForm'
 import LoginForm from './components/LoginForm'
@@ -151,6 +152,8 @@ const App = () => {
       <Oligos oligosToShow = {oligosToShow} editOligo ={updateOligo} deleteOligo = {deleteOligo} />
       <h1>Genes</h1>
       <Genes />
+      <h1>Plasmids</h1>
+      <Plasmids />
       {user !== null &&
       <Togglable buttonLabel="new oligo" ref={oligoFormRef}>
         <AddOligoForm
