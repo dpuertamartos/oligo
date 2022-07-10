@@ -67,7 +67,7 @@ const App = () => {
       <h1>Oligos</h1>
       <Oligos setErrorMessage={setErrorMessage} user={user}/>
       <h1>Genes</h1>
-      <Genes />
+      <Genes setErrorMessage={setErrorMessage} user={user}/>
       <h1>Plasmids</h1>
       <Plasmids /> 
     </div>
