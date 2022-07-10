@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import oligoService from './services/oligos'
 import loginService from './services/login'
 import Oligos from './components/Oligos'
+import Genes from './components/Genes'
 import Filter from './components/Filter'
 import AddOligoForm from './components/AddOligoForm'
 import LoginForm from './components/LoginForm'
@@ -148,6 +149,8 @@ const App = () => {
         {showAll ? 'filter OFF, click to activate' : 'FILTER ON, click to deactivate'}
       </button>
       <Oligos oligosToShow = {oligosToShow} editOligo ={updateOligo} deleteOligo = {deleteOligo} />
+      <h1>Genes</h1>
+      <Genes />
       {user !== null &&
       <Togglable buttonLabel="new oligo" ref={oligoFormRef}>
         <AddOligoForm
