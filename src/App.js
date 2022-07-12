@@ -89,7 +89,7 @@ const App = () => {
       <h1>Genes</h1>
       <Genes setErrorMessage={setErrorMessage} user={user}/>
       <h1>Plasmids</h1>
-      <Plasmids /> 
+      <Plasmids setErrorMessage={setErrorMessage} user={user}/> 
     </div>
   )
 }
