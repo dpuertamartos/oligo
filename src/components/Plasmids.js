@@ -29,7 +29,29 @@ const Plasmids = ({setErrorMessage, user}) => {
               setTimeout(()=>{setErrorMessage(null)},5000)
           })    
     }
-    const deletePlasmid = (id) => console.log("deleting plasmid", id)
+    const deletePlasmid = id => {
+      const plasmid = plasmids.find(o => o.id === id)
+      if(window.confirm(`do you want delete plasmid with ID: ${id} and name: ${plasmid.name}?`)){
+        plasmidService
+          .remove(id)
+          .then(()=>{
+            setPlasmids(plasmids.filter(n => n.id !== id))
+            setErrorMessage(
+              [`plasmid ${plasmid.name} was deleted from server`,"confirmation"]
+            )
+          })
+          .catch(error => {
+            setErrorMessage(
+              [`plasmid ${plasmid.name} was already deleted from server`,"error"]
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            setPlasmids(plasmids.filter(n=>n.id !== id))
+          })
+      }
+    }
+    
     const editPlasmid = (id, edit) => console.log("editing plasmid",id,edit)
 
     
