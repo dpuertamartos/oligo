@@ -16,10 +16,21 @@ const Genes = ({setErrorMessage, user}) => {
           })
       }, [])
     
-    const addGene = (id) => {
+    const addGene = (geneObject) => {
         geneFormRef.current.toggleVisibility()
-        console.log("adding gene", id)
+        console.log("adding gene", geneObject)
+        geneService
+            .create(geneObject)
+            .then(returnedGene => {
+                setGenes(genes.concat(returnedGene))
+                setErrorMessage(
+                    [`gene ${geneObject.name} was added to server`,"confirmation"]
+                )
+                setTimeout(()=>{setErrorMessage(null)},5000)
+            })
+            
     }
+
     const deleteGene = (id) => console.log("deleting gene", id)
     const editGene = (id, edit) => console.log("editing gene",id,edit)
     

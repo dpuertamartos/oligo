@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import oligoService from './services/oligos'
+import geneService from './services/genes'
+import plasmidService from './services/plasmids'
 import loginService from './services/login'
 import Oligos from './components/Oligos'
 import Genes from './components/Genes'
@@ -21,7 +23,13 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      console.log(user.token)
       oligoService.setToken(user.token)
+      console.log(user.token)
+      geneService.setToken(user.token)
+      console.log(user.token)
+      plasmidService.setToken(user.token)
+      console.log(user.token)
     }
   }, [])
 
@@ -47,11 +55,23 @@ const App = () => {
     }
   }
 
+  const handleLogout = () => {
+    window.localStorage.clear()
+    setUser(null)
+    oligoService.setToken(null)
+    geneService.setToken(null)
+    plasmidService.setToken(null)
+    setErrorMessage(["logged out","confirmation"])
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
+
   
 
   return (
     <div>
-      {user !== null && <div>{user.name} logged-in</div>}
+      {user !== null && <div>{user.name} logged-in <span><button onClick={()=>handleLogout()}>Log-out</button></span></div>}
       <Notification message={errorMessage} />
       {user === null && 
       <Togglable buttonLabel='login'>
