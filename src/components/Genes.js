@@ -31,7 +31,28 @@ const Genes = ({setErrorMessage, user}) => {
             
     }
 
-    const deleteGene = (id) => console.log("deleting gene", id)
+    const deleteGene = id => {
+        const gene = genes.find(o => o.id === id)
+        if(window.confirm(`do you want delete gene with ID: ${id} and name: ${gene.name}?`)){
+          geneService
+            .remove(id)
+            .then(()=>{
+              setGenes(genes.filter(n => n.id !== id))
+              setErrorMessage(
+                [`gene ${gene.name} was deleted from server`,"confirmation"]
+              )
+            })
+            .catch(error => {
+              setErrorMessage(
+                [`gene ${gene.name} was already deleted from server`,"error"]
+              )
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 5000)
+              setGenes(genes.filter(n=>n.id !== id))
+            })
+        }
+      }
     const editGene = (id, edit) => console.log("editing gene",id,edit)
     
     const geneFormRef = useRef()
