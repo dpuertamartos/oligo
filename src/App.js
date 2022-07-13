@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import oligoService from './services/oligos'
 import geneService from './services/genes'
 import plasmidService from './services/plasmids'
@@ -9,15 +9,25 @@ import Plasmids from './components/Plasmids'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
+import { useDispatch } from 'react-redux'
+import { initializeOligos } from './reducers/oligoReducer'
+import { initializeGenes } from './reducers/geneReducer'
+import { initializePlasmids } from './reducers/plasmidReducer'
 
 
 const App = () => {
-  
+  const dispatch = useDispatch()
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   
+  useEffect(() => {
+    dispatch(initializeOligos())
+    dispatch(initializeGenes())
+    dispatch(initializePlasmids()) 
+  },[dispatch]) 
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
@@ -85,11 +95,11 @@ const App = () => {
       </Togglable>
       }
       <h1>Oligos</h1>
-      <Oligos setErrorMessage={setErrorMessage} user={user}/>
+      <Oligos setErrorMessage={setErrorMessage} user={user} />
       <h1>Genes</h1>
-      <Genes setErrorMessage={setErrorMessage} user={user}/>
+      <Genes setErrorMessage={setErrorMessage} user={user} />
       <h1>Plasmids</h1>
-      <Plasmids setErrorMessage={setErrorMessage} user={user}/> 
+      <Plasmids setErrorMessage={setErrorMessage} user={user} /> 
     </div>
   )
 }

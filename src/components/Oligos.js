@@ -6,35 +6,27 @@ import Togglable from './Togglable'
 import AddOligoForm from './AddOligoForm'
 import Filter from './Filter'
 import filter from '../logic/filter'
+import { createOligo } from './reducers/oligoReducer'
+import { useSelector, useDispatch } from 'react-redux'
 
 const Oligos = ({setErrorMessage, user}) => {
-    const [oligos, setOligos] = useState([])
-    const [showAll, setShowAll] = useState(true)
+    const dispatch = useDispatch()
+    const oligos = useSelector(state => state.oligos)
+    
     const [newSearch, setNewSearch] = useState(["Search sequence","Search gene","Search plasmid"])
     const [filterType, setFilterType] = useState([])
 
-    useEffect(() => {
-        oligoService
-          .getAll()
-          .then(initialOligos => {
-            setOligos(initialOligos)
-          })
-      }, [])
     
     const addOligo = (oligoObject) => {
-    oligoFormRef.current.toggleVisibility()
-    oligoService
-        .create(oligoObject)
-        .then(returnedOligo => {
-        setOligos(oligos.concat(returnedOligo))
-        setErrorMessage(
-            [`oligo ${oligoObject.sequence} was added to server`,"confirmation"]
-        )
-        setTimeout(() => {
-            setErrorMessage(null)
-        }, 5000)
-        })
-    }
+      oligoFormRef.current.toggleVisibility()
+      dispatch(createOligo(oligoObject))
+      setErrorMessage(
+        [`oligo ${oligoObject.sequence} was added to server`,"confirmation"]
+      )
+      setTimeout(() => {
+          setErrorMessage(null)
+      }, 5000)
+    }  
 
     const updateOligo = (id, newsequence) => {
         const oligo = oligos.find(o => o.id === id)
@@ -43,7 +35,10 @@ const Oligos = ({setErrorMessage, user}) => {
         oligoService
           .update(id, changedOligo)
           .then(returnedOligo =>{
-            setOligos(oligos.map(oligo => oligo.id !== id ? oligo : returnedOligo))
+            dispatch({
+              TYPE: 'EDIT_OLIGO',
+              data: returnedOligo
+            })
           })
           .catch(error => {
             setErrorMessage(
@@ -62,7 +57,10 @@ const Oligos = ({setErrorMessage, user}) => {
           oligoService
             .remove(id)
             .then(()=>{
-              setOligos(oligos.filter(n => n.id !== id))
+              dispatch({
+                TYPE: 'REMOVE_OLIGO',
+                data: {id:id}
+              })
               setErrorMessage(
                 [`oligo ${oligo.sequence} was deleted from server`,"confirmation"]
               )
