@@ -28,10 +28,10 @@ const AddOligoForm = ({createOligo}) => {
     return( 
     <form onSubmit={addOligo}>
       <label>
-      NAME <input value={newName} onChange={handleNameChange}/>
+      NAME <input className="enterOligoName" value={newName} onChange={handleNameChange}/>
       </label>
       <label>
-      SEQUENCE <input value={newOligo} onChange={handleOligoChange}/>
+      SEQUENCE <input className="enterOligoSequence" value={newOligo} onChange={handleOligoChange}/>
       </label>
       <button type="submit">save</button>
     </form>
