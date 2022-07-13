@@ -5,7 +5,7 @@ import Togglable from './Togglable'
 import AddOligoForm from './AddOligoForm'
 import Filter from './Filter'
 import filter from '../logic/filter'
-import { createOligo } from '../reducers/oligoReducer'
+import { createOligo, removeOligo } from '../reducers/oligoReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
 const Oligos = ({setErrorMessage, user}) => {
@@ -53,9 +53,17 @@ const Oligos = ({setErrorMessage, user}) => {
     
       const deleteOligo = id => {
         console.log("delete Oligo", id)
-        /* const oligo = oligos.find(o => o.id === id)
+        
+        const oligo = oligos.find(o => o.id === id)
         if(window.confirm(`do you want delete oligo with ID: ${id} and sequence: ${oligo.sequence}?`)){
-          oligoService
+          dispatch(removeOligo(id))
+          setErrorMessage(
+            [`oligo ${oligo.sequence} was deleted from server`,"confirmation"]
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          /* oligoService
             .remove(id)
             .then(()=>{
               dispatch({
@@ -74,8 +82,8 @@ const Oligos = ({setErrorMessage, user}) => {
                 setErrorMessage(null)
               }, 5000)
               setOligos(oligos.filter(n=>n.id !== id))
-            })
-        } */
+            }) */
+        } 
       }
     
     const handleFilterChange = (key) => {
