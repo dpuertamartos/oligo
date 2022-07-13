@@ -17,7 +17,7 @@ const Oligo = ({oligo, editOligo, deleteOligo}) => {
 
 
     return(
-        <li>{oligo.name}<button onClick={()=>setNewShowEdit(!showEdit)}>EDIT</button><button onClick={()=>deleteOligo(oligo.id)}>DELETE</button>
+        <li className="oligo">{oligo.name}<button onClick={()=>setNewShowEdit(!showEdit)}>EDIT</button><button onClick={()=>deleteOligo(oligo.id)}>DELETE</button>
             {showEdit 
                 ? <EditForm onSubmit={changeOligo} ipValue={newEdit} ipOnChange={handleEditChange} /> 
                 : <span></span> }
