@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import geneService from '../services/genes'
+import { createNotification } from './notificationReducer'
 
 const geneSlice = createSlice({
   name: 'genes',
@@ -38,6 +39,7 @@ export const createGene = content => {
     return async dispatch => {
       const newGene= await geneService.create(content)
       dispatch(appendGene(newGene))
+      dispatch(createNotification([`gene ${newGene.name} was added to server`,"confirmation"]))
     }
 }
 

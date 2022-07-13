@@ -20,9 +20,6 @@ const Oligos = ({user}) => {
     const addOligo = (oligoObject) => {
       oligoFormRef.current.toggleVisibility()
       dispatch(createOligo(oligoObject))
-      dispatch(createNotification(
-        [`oligo ${oligoObject.sequence} was added to server`,"confirmation"]
-      ))
     }  
 
     const updateOligo = (id, newsequence) => {
@@ -55,7 +52,6 @@ const Oligos = ({user}) => {
         const oligo = oligos.find(o => o.id === id)
         if(window.confirm(`do you want delete oligo with ID: ${id} and sequence: ${oligo.sequence}?`)){
           dispatch(removeOligo(id))
-          dispatch(createNotification([`oligo ${oligo.sequence} was deleted from server`,"confirmation"]))
           
           /* oligoService
             .remove(id)

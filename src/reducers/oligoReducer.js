@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { createNotification } from './notificationReducer'
 import oligoService from '../services/oligos'
 
 const oligoSlice = createSlice({
@@ -42,14 +43,23 @@ export const createOligo = content => {
     return async dispatch => {
       const newOligo= await oligoService.create(content)
       dispatch(appendOligo(newOligo))
+      dispatch(createNotification(
+        [`oligo ${newOligo.sequence} was added to server`,"confirmation"]
+      ))
     }
 }
 
 export const removeOligo = id => {
     return async dispatch => {
-        await oligoService.remove(id)
-        // need to add error handling
+      try{
+        const removed = await oligoService.remove(id)
         dispatch(deleteOligo({id:id}))
+        dispatch(createNotification([`oligo ${id} was deleted from server`,"confirmation"]))
+      }
+      catch{
+        //not getting error from backend when oligo is already deleted
+        dispatch(createNotification([`oligo ${id} was already deleted from server`,"error"]))
+      }
     }
 }
 

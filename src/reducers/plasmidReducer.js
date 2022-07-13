@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import plasmidService from '../services/plasmids'
+import { createNotification } from './notificationReducer'
 
 const plasmidSlice = createSlice({
   name: 'plasmids',
@@ -38,6 +39,7 @@ export const createPlasmid = content => {
     return async dispatch => {
       const newPlasmid= await plasmidService.create(content)
       dispatch(appendPlasmid(newPlasmid))
+      dispatch(createNotification([`plasmid ${newPlasmid.name} was added to server`,"confirmation"]))
     }
 }
 
