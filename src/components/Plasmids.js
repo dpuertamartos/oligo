@@ -1,36 +1,28 @@
 import React from 'react'
-import { useState, useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import Plasmid from './Plasmid'
-import plasmidService from "../services/plasmids"
 import Togglable from './Togglable'
 import AddPlasmidForm from './AddPlasmidForm'
+import { createPlasmid } from '../reducers/plasmidReducer'
+import { useSelector, useDispatch } from 'react-redux'
 
 const Plasmids = ({setErrorMessage, user}) => {
-    const [plasmids, setPlasmids] = useState([])
-
-    useEffect(() => {
-        plasmidService
-          .getAll()
-          .then(initialPlasmids => {
-            setPlasmids(initialPlasmids)
-          })
-      }, [])
-
-    const addPlasmid = (plasmidObject) => {
+  const dispatch = useDispatch()
+  const plasmids = useSelector(state => state.plasmids)
+  
+  const addPlasmid = (plasmidObject) => {
       plasmidFormRef.current.toggleVisibility()
-      console.log("adding plasmid", plasmidObject)
-      plasmidService
-          .create(plasmidObject)
-          .then(returnedGene => {
-              setPlasmids(plasmids.concat(returnedGene))
-              setErrorMessage(
-                  [`plasmid ${plasmidObject.name} was added to server`,"confirmation"]
-              )
-              setTimeout(()=>{setErrorMessage(null)},5000)
-          })    
-    }
+      console.log("adding gene", plasmidObject)
+      dispatch(createPlasmid(plasmidObject))
+      setErrorMessage(
+          [`plasmid ${plasmidObject.name} was added to server`,"confirmation"]
+      )
+      setTimeout(()=>{setErrorMessage(null)},5000)    
+  }
+
     const deletePlasmid = id => {
-      const plasmid = plasmids.find(o => o.id === id)
+      console.log("editing plasmid",id)
+      /* const plasmid = plasmids.find(o => o.id === id)
       if(window.confirm(`do you want delete plasmid with ID: ${id} and name: ${plasmid.name}?`)){
         plasmidService
           .remove(id)
@@ -49,7 +41,7 @@ const Plasmids = ({setErrorMessage, user}) => {
             }, 5000)
             setPlasmids(plasmids.filter(n=>n.id !== id))
           })
-      }
+      } */
     }
     
     const editPlasmid = (id, edit) => console.log("editing plasmid",id,edit)

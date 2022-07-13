@@ -54,6 +54,8 @@ const App = () => {
         'loggedNoteappUser', JSON.stringify(user)
       ) 
       oligoService.setToken(user.token)
+      geneService.setToken(user.token)
+      plasmidService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')

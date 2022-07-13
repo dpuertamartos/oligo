@@ -1,12 +1,11 @@
 import React from 'react'
 import {useState, useEffect, useRef} from 'react'
-import oligoService from '../services/oligos'
 import Oligo from './Oligo'
 import Togglable from './Togglable'
 import AddOligoForm from './AddOligoForm'
 import Filter from './Filter'
 import filter from '../logic/filter'
-import { createOligo } from './reducers/oligoReducer'
+import { createOligo } from '../reducers/oligoReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
 const Oligos = ({setErrorMessage, user}) => {
@@ -29,7 +28,8 @@ const Oligos = ({setErrorMessage, user}) => {
     }  
 
     const updateOligo = (id, newsequence) => {
-        const oligo = oligos.find(o => o.id === id)
+      console.log("updateOligo",id)
+        /* const oligo = oligos.find(o => o.id === id)
         const changedOligo = {...oligo, sequence: newsequence}
     
         oligoService
@@ -48,11 +48,12 @@ const Oligos = ({setErrorMessage, user}) => {
               setErrorMessage(null)
             }, 5000)
             setOligos(oligos.filter(n=>n.id !== id))
-          })
+          }) */
       }
     
       const deleteOligo = id => {
-        const oligo = oligos.find(o => o.id === id)
+        console.log("delete Oligo", id)
+        /* const oligo = oligos.find(o => o.id === id)
         if(window.confirm(`do you want delete oligo with ID: ${id} and sequence: ${oligo.sequence}?`)){
           oligoService
             .remove(id)
@@ -74,7 +75,7 @@ const Oligos = ({setErrorMessage, user}) => {
               }, 5000)
               setOligos(oligos.filter(n=>n.id !== id))
             })
-        }
+        } */
       }
     
     const handleFilterChange = (key) => {
