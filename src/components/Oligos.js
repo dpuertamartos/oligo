@@ -6,9 +6,10 @@ import AddOligoForm from './AddOligoForm'
 import Filter from './Filter'
 import filter from '../logic/filter'
 import { createOligo, removeOligo } from '../reducers/oligoReducer'
+import { createNotification } from '../reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
-const Oligos = ({setErrorMessage, user}) => {
+const Oligos = ({user}) => {
     const dispatch = useDispatch()
     const oligos = useSelector(state => state.oligos)
     
@@ -19,12 +20,9 @@ const Oligos = ({setErrorMessage, user}) => {
     const addOligo = (oligoObject) => {
       oligoFormRef.current.toggleVisibility()
       dispatch(createOligo(oligoObject))
-      setErrorMessage(
+      dispatch(createNotification(
         [`oligo ${oligoObject.sequence} was added to server`,"confirmation"]
-      )
-      setTimeout(() => {
-          setErrorMessage(null)
-      }, 5000)
+      ))
     }  
 
     const updateOligo = (id, newsequence) => {
@@ -57,12 +55,8 @@ const Oligos = ({setErrorMessage, user}) => {
         const oligo = oligos.find(o => o.id === id)
         if(window.confirm(`do you want delete oligo with ID: ${id} and sequence: ${oligo.sequence}?`)){
           dispatch(removeOligo(id))
-          setErrorMessage(
-            [`oligo ${oligo.sequence} was deleted from server`,"confirmation"]
-          )
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
+          dispatch(createNotification([`oligo ${oligo.sequence} was deleted from server`,"confirmation"]))
+          
           /* oligoService
             .remove(id)
             .then(()=>{

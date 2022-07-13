@@ -4,9 +4,10 @@ import Plasmid from './Plasmid'
 import Togglable from './Togglable'
 import AddPlasmidForm from './AddPlasmidForm'
 import { createPlasmid } from '../reducers/plasmidReducer'
+import { createNotification } from '../reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
-const Plasmids = ({setErrorMessage, user}) => {
+const Plasmids = ({user}) => {
   const dispatch = useDispatch()
   const plasmids = useSelector(state => state.plasmids)
   
@@ -14,10 +15,7 @@ const Plasmids = ({setErrorMessage, user}) => {
       plasmidFormRef.current.toggleVisibility()
       console.log("adding gene", plasmidObject)
       dispatch(createPlasmid(plasmidObject))
-      setErrorMessage(
-          [`plasmid ${plasmidObject.name} was added to server`,"confirmation"]
-      )
-      setTimeout(()=>{setErrorMessage(null)},5000)    
+      dispatch(createNotification([`plasmid ${plasmidObject.name} was added to server`,"confirmation"]))   
   }
 
     const deletePlasmid = id => {

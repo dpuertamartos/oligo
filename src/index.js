@@ -7,13 +7,15 @@ import { Provider } from 'react-redux'
 import oligoReducer from './reducers/oligoReducer'
 import geneReducer from './reducers/geneReducer'
 import plasmidReducer from './reducers/plasmidReducer'
+import notificationReducer from './reducers/notificationReducer'
 
 
 const store = configureStore({
   reducer: {
     oligos: oligoReducer,
     genes: geneReducer,
-    plasmids: plasmidReducer
+    plasmids: plasmidReducer,
+    notification: notificationReducer
   }
 })
 

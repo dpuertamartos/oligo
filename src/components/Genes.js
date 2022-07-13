@@ -4,9 +4,10 @@ import Gene from './Gene'
 import AddGeneForm from './AddGeneForm'
 import Togglable from './Togglable'
 import { createGene } from '../reducers/geneReducer'
+import { createNotification } from '../reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
-const Genes = ({setErrorMessage, user}) => {
+const Genes = ({user}) => {
     const dispatch = useDispatch()
     const genes = useSelector(state => state.genes)
     
@@ -14,10 +15,7 @@ const Genes = ({setErrorMessage, user}) => {
         geneFormRef.current.toggleVisibility()
         console.log("adding gene", geneObject)
         dispatch(createGene(geneObject))
-        setErrorMessage(
-            [`gene ${geneObject.name} was added to server`,"confirmation"]
-        )
-        setTimeout(()=>{setErrorMessage(null)},5000)    
+        dispatch(createNotification([`gene ${geneObject.name} was added to server`,"confirmation"]))  
     }
 
     const deleteGene = id => {

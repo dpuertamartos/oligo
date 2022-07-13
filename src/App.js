@@ -9,15 +9,16 @@ import Plasmids from './components/Plasmids'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { initializeOligos } from './reducers/oligoReducer'
 import { initializeGenes } from './reducers/geneReducer'
 import { initializePlasmids } from './reducers/plasmidReducer'
+import { createNotification } from './reducers/notificationReducer'
 
 
 const App = () => {
   const dispatch = useDispatch()
-  const [errorMessage, setErrorMessage] = useState(null)
+  const errorMessage = useSelector(state => state.notification)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -60,10 +61,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage(['Wrong credentials',"error"])
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(createNotification(['Wrong credentials',"error"]))
     }
   }
 
@@ -73,10 +71,7 @@ const App = () => {
     oligoService.setToken(null)
     geneService.setToken(null)
     plasmidService.setToken(null)
-    setErrorMessage(["logged out","confirmation"])
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
+    dispatch(createNotification(["logged out","confirmation"]))
   }
 
   
@@ -97,11 +92,11 @@ const App = () => {
       </Togglable>
       }
       <h1>Oligos</h1>
-      <Oligos setErrorMessage={setErrorMessage} user={user} />
+      <Oligos user={user} />
       <h1>Genes</h1>
-      <Genes setErrorMessage={setErrorMessage} user={user} />
+      <Genes user={user} />
       <h1>Plasmids</h1>
-      <Plasmids setErrorMessage={setErrorMessage} user={user} /> 
+      <Plasmids user={user} /> 
     </div>
   )
 }
