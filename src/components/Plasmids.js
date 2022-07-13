@@ -15,7 +15,7 @@ const Plasmids = ({user}) => {
       plasmidFormRef.current.toggleVisibility()
       console.log("adding gene", plasmidObject)
       dispatch(createPlasmid(plasmidObject))
-      dispatch(createNotification([`plasmid ${plasmidObject.name} was added to server`,"confirmation"]))   
+         
   }
 
     const deletePlasmid = id => {

@@ -14,8 +14,7 @@ const Genes = ({user}) => {
     const addGene = (geneObject) => {
         geneFormRef.current.toggleVisibility()
         console.log("adding gene", geneObject)
-        dispatch(createGene(geneObject))
-        dispatch(createNotification([`gene ${geneObject.name} was added to server`,"confirmation"]))  
+        dispatch(createGene(geneObject))  
     }
 
     const deleteGene = id => {
