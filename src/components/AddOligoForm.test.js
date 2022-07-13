@@ -8,7 +8,7 @@ test('<AddOligoForm /> updates parent state and calls onSubmit', async () => {
   const createOligo = jest.fn()
   const user = userEvent.setup()
 
-  const container = render(<AddOligoForm createOligo={createOligo} />).container
+  const {container} = render(<AddOligoForm createOligo={createOligo} />)
 
   let input = container.querySelector('.enterOligoName')
   let input2 = container.querySelector('.enterOligoSequence')
