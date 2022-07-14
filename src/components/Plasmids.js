@@ -1,58 +1,35 @@
 import React from 'react'
-import { useState, useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import Plasmid from './Plasmid'
-import plasmidService from "../services/plasmids"
 import Togglable from './Togglable'
 import AddPlasmidForm from './AddPlasmidForm'
+import { createPlasmid, removePlasmid, updatePlasmid } from '../reducers/plasmidReducer'
+import { createNotification } from '../reducers/notificationReducer'
+import { useSelector, useDispatch } from 'react-redux'
 
-const Plasmids = ({setErrorMessage, user}) => {
-    const [plasmids, setPlasmids] = useState([])
-
-    useEffect(() => {
-        plasmidService
-          .getAll()
-          .then(initialPlasmids => {
-            setPlasmids(initialPlasmids)
-          })
-      }, [])
-
-    const addPlasmid = (plasmidObject) => {
+const Plasmids = ({user}) => {
+  const dispatch = useDispatch()
+  const plasmids = useSelector(state => state.plasmids)
+  
+  const addPlasmid = (plasmidObject) => {
       plasmidFormRef.current.toggleVisibility()
-      console.log("adding plasmid", plasmidObject)
-      plasmidService
-          .create(plasmidObject)
-          .then(returnedGene => {
-              setPlasmids(plasmids.concat(returnedGene))
-              setErrorMessage(
-                  [`plasmid ${plasmidObject.name} was added to server`,"confirmation"]
-              )
-              setTimeout(()=>{setErrorMessage(null)},5000)
-          })    
-    }
+      console.log("adding gene", plasmidObject)
+      dispatch(createPlasmid(plasmidObject))
+         
+  }
+
     const deletePlasmid = id => {
       const plasmid = plasmids.find(o => o.id === id)
       if(window.confirm(`do you want delete plasmid with ID: ${id} and name: ${plasmid.name}?`)){
-        plasmidService
-          .remove(id)
-          .then(()=>{
-            setPlasmids(plasmids.filter(n => n.id !== id))
-            setErrorMessage(
-              [`plasmid ${plasmid.name} was deleted from server`,"confirmation"]
-            )
-          })
-          .catch(error => {
-            setErrorMessage(
-              [`plasmid ${plasmid.name} was already deleted from server`,"error"]
-            )
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 5000)
-            setPlasmids(plasmids.filter(n=>n.id !== id))
-          })
-      }
+        dispatch(removePlasmid(id))
+      } 
     }
     
-    const editPlasmid = (id, edit) => console.log("editing plasmid",id,edit)
+    const editPlasmid = (id, edit) => {
+      console.log("editing", id)
+      const plasmid = plasmids.find(o=>o.id===id)
+      dispatch(updatePlasmid({...plasmid, name:edit}))
+    }
 
     
     const plasmidFormRef = useRef()
@@ -60,18 +37,22 @@ const Plasmids = ({setErrorMessage, user}) => {
 
     return (
         <div>
+          <div><span className="titleSection">Plasmids </span>
+          <span>
+            {user !== null &&
+            <Togglable buttonLabel="new plasmid" ref={plasmidFormRef}>
+                <AddPlasmidForm
+                createPlasmid={addPlasmid}
+                />
+            </Togglable>
+            }
+          </span>
+          </div>
         <ul>
             {plasmids.map(p => 
-            <Plasmid key={p.id} plasmid={p} deletePlasmid={deletePlasmid} editGene={editPlasmid} />
+            <Plasmid key={p.id} plasmid={p} deletePlasmid={deletePlasmid} editPlasmid={editPlasmid} />
             )}
         </ul>
-        {user !== null &&
-          <Togglable buttonLabel="new plasmid" ref={plasmidFormRef}>
-              <AddPlasmidForm
-              createPlasmid={addPlasmid}
-              />
-          </Togglable>
-        }
         </div>
     )}
 

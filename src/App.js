@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import oligoService from './services/oligos'
 import geneService from './services/genes'
 import plasmidService from './services/plasmids'
@@ -9,27 +9,34 @@ import Plasmids from './components/Plasmids'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
+import { useDispatch, useSelector } from 'react-redux'
+import { initializeOligos } from './reducers/oligoReducer'
+import { initializeGenes } from './reducers/geneReducer'
+import { initializePlasmids } from './reducers/plasmidReducer'
+import { createNotification } from './reducers/notificationReducer'
 
 
 const App = () => {
-  
-  const [errorMessage, setErrorMessage] = useState(null)
+  const dispatch = useDispatch()
+  const errorMessage = useSelector(state => state.notification)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   
   useEffect(() => {
+    dispatch(initializeOligos())
+    dispatch(initializeGenes())
+    dispatch(initializePlasmids()) 
+  },[dispatch]) 
+
+  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      console.log(user.token)
       oligoService.setToken(user.token)
-      console.log(user.token)
       geneService.setToken(user.token)
-      console.log(user.token)
       plasmidService.setToken(user.token)
-      console.log(user.token)
     }
   }, [])
 
@@ -44,14 +51,13 @@ const App = () => {
         'loggedNoteappUser', JSON.stringify(user)
       ) 
       oligoService.setToken(user.token)
+      geneService.setToken(user.token)
+      plasmidService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage(['Wrong credentials',"error"])
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(createNotification(['Wrong credentials',"error"]))
     }
   }
 
@@ -61,35 +67,41 @@ const App = () => {
     oligoService.setToken(null)
     geneService.setToken(null)
     plasmidService.setToken(null)
-    setErrorMessage(["logged out","confirmation"])
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
+    dispatch(createNotification(["logged out","confirmation"]))
   }
 
   
 
   return (
-    <div>
-      {user !== null && <div>{user.name} logged-in <span><button onClick={()=>handleLogout()}>Log-out</button></span></div>}
-      <Notification message={errorMessage} />
-      {user === null && 
-      <Togglable buttonLabel='login'>
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-        />
-      </Togglable>
-      }
-      <h1>Oligos</h1>
-      <Oligos setErrorMessage={setErrorMessage} user={user}/>
-      <h1>Genes</h1>
-      <Genes setErrorMessage={setErrorMessage} user={user}/>
-      <h1>Plasmids</h1>
-      <Plasmids setErrorMessage={setErrorMessage} user={user}/> 
+    <div className="container">
+      <div className="row">
+        {user !== null && <div>{user.name} logged-in <span><button onClick={()=>handleLogout()}>Log-out</button></span></div>}
+        {user === null && 
+        <Togglable buttonLabel='login'>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
+        }
+      </div>
+      <div className="row">
+        <Notification message={errorMessage} />
+      </div>
+      <div className="row">
+        <div className="col-4">
+          <Oligos user={user} />
+        </div>
+        <div className="col-4">
+          <Genes user={user} />
+        </div>
+        <div className="col-4">
+          <Plasmids user={user} /> 
+        </div>
+      </div>
     </div>
   )
 }

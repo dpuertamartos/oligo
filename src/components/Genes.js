@@ -1,77 +1,55 @@
 import React from 'react'
 import { useState, useEffect, useRef } from 'react'
 import Gene from './Gene'
-import geneService from "../services/genes"
 import AddGeneForm from './AddGeneForm'
 import Togglable from './Togglable'
+import { createGene, removeGene, editGene } from '../reducers/geneReducer'
+import { createNotification } from '../reducers/notificationReducer'
+import { useSelector, useDispatch } from 'react-redux'
 
-const Genes = ({setErrorMessage, user}) => {
-    const [genes, setGenes] = useState([])
-
-    useEffect(() => {
-        geneService
-          .getAll()
-          .then(initialGenes => {
-            setGenes(initialGenes)
-          })
-      }, [])
+const Genes = ({user}) => {
+    const dispatch = useDispatch()
+    const genes = useSelector(state => state.genes)
     
     const addGene = (geneObject) => {
         geneFormRef.current.toggleVisibility()
         console.log("adding gene", geneObject)
-        geneService
-            .create(geneObject)
-            .then(returnedGene => {
-                setGenes(genes.concat(returnedGene))
-                setErrorMessage(
-                    [`gene ${geneObject.name} was added to server`,"confirmation"]
-                )
-                setTimeout(()=>{setErrorMessage(null)},5000)
-            })
-            
+        dispatch(createGene(geneObject))  
     }
 
     const deleteGene = id => {
         const gene = genes.find(o => o.id === id)
         if(window.confirm(`do you want delete gene with ID: ${id} and name: ${gene.name}?`)){
-          geneService
-            .remove(id)
-            .then(()=>{
-              setGenes(genes.filter(n => n.id !== id))
-              setErrorMessage(
-                [`gene ${gene.name} was deleted from server`,"confirmation"]
-              )
-            })
-            .catch(error => {
-              setErrorMessage(
-                [`gene ${gene.name} was already deleted from server`,"error"]
-              )
-              setTimeout(() => {
-                setErrorMessage(null)
-              }, 5000)
-              setGenes(genes.filter(n=>n.id !== id))
-            })
+          dispatch(removeGene(id))
         }
-      }
-    const editGene = (id, edit) => console.log("editing gene",id,edit)
+    } 
+     
+    const updateGene = (id, edit) => {
+      const gene = genes.find(o => o.id === id)
+      dispatch(editGene({...gene, name:edit}))
+    }
     
     const geneFormRef = useRef()
     const genesToShow = genes
 
     return (
         <div>
+          <div><span className="titleSection">Genes </span>
+          <span>
+            {user !== null &&
+              <Togglable buttonLabel="new gene" ref={geneFormRef}>
+                  <AddGeneForm
+                  createGene={addGene}
+                  />
+              </Togglable>
+            }
+            </span>
+          </div>
         <ul>
             {genes.map(gene => 
-            <Gene key={gene.id} gene={gene} deleteGene={deleteGene} editGene={editGene} />
+            <Gene key={gene.id} gene={gene} deleteGene={deleteGene} editGene={updateGene} />
             )}
         </ul>
-        {user !== null &&
-            <Togglable buttonLabel="new gene" ref={geneFormRef}>
-                <AddGeneForm
-                createGene={addGene}
-                />
-            </Togglable>
-        }
         </div>
     )}
 
