@@ -5,7 +5,7 @@ import Togglable from './Togglable'
 import AddOligoForm from './AddOligoForm'
 import Filter from './Filter'
 import filter from '../logic/filter'
-import { createOligo, removeOligo } from '../reducers/oligoReducer'
+import { createOligo, removeOligo, editOligo } from '../reducers/oligoReducer'
 import { createNotification } from '../reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -24,57 +24,19 @@ const Oligos = ({user}) => {
 
     const updateOligo = (id, newsequence) => {
       console.log("updateOligo",id)
-        /* const oligo = oligos.find(o => o.id === id)
-        const changedOligo = {...oligo, sequence: newsequence}
+      const oligo = oligos.find(o=>o.id===id)
+      dispatch(editOligo({...oligo, sequence: newsequence}))
+
+    }
     
-        oligoService
-          .update(id, changedOligo)
-          .then(returnedOligo =>{
-            dispatch({
-              TYPE: 'EDIT_OLIGO',
-              data: returnedOligo
-            })
-          })
-          .catch(error => {
-            setErrorMessage(
-              [`oligo ${oligo.sequence} was already deleted from server`,"error"]
-            )
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 5000)
-            setOligos(oligos.filter(n=>n.id !== id))
-          }) */
-      }
-    
-      const deleteOligo = id => {
-        console.log("delete Oligo", id)
-        
-        const oligo = oligos.find(o => o.id === id)
-        if(window.confirm(`do you want delete oligo with ID: ${id} and sequence: ${oligo.sequence}?`)){
-          dispatch(removeOligo(id))
-          
-          /* oligoService
-            .remove(id)
-            .then(()=>{
-              dispatch({
-                TYPE: 'REMOVE_OLIGO',
-                data: {id:id}
-              })
-              setErrorMessage(
-                [`oligo ${oligo.sequence} was deleted from server`,"confirmation"]
-              )
-            })
-            .catch(error => {
-              setErrorMessage(
-                [`oligo ${oligo.sequence} was already deleted from server`,"error"]
-              )
-              setTimeout(() => {
-                setErrorMessage(null)
-              }, 5000)
-              setOligos(oligos.filter(n=>n.id !== id))
-            }) */
-        } 
-      }
+    const deleteOligo = id => {
+      console.log("delete Oligo", id)
+      
+      const oligo = oligos.find(o => o.id === id)
+      if(window.confirm(`do you want delete oligo with ID: ${id} and sequence: ${oligo.sequence}?`)){
+        dispatch(removeOligo(id))
+      } 
+    }
     
     const handleFilterChange = (key) => {
       if(filterType.includes(key)){

@@ -6,7 +6,7 @@ const oligoSlice = createSlice({
   name: 'oligos',
   initialState: [],
   reducers: {
-    toggleImportanceOf(state, action) {
+    updateOligo(state, action) {
         const id = action.payload.id
         const oligoToChange = state.find(n => n.id === id)
         const changedOligo = { 
@@ -30,7 +30,7 @@ const oligoSlice = createSlice({
   },
 })
 
-export const { createNote, toggleImportanceOf, appendOligo, setOligos, deleteOligo } = oligoSlice.actions
+export const { updateOligo, appendOligo, setOligos, deleteOligo } = oligoSlice.actions
 
 export const initializeOligos = () => {
     return async dispatch => {
@@ -58,7 +58,21 @@ export const removeOligo = id => {
       }
       catch{
         //not getting error from backend when oligo is already deleted
+        dispatch(deleteOligo({id:id}))
         dispatch(createNotification([`oligo ${id} was already deleted from server`,"error"]))
+      }
+    }
+}
+
+export const editOligo = content => {
+    return async dispatch => {
+      try{
+        const updatedOligo = await oligoService.update(content.id,content)
+        dispatch(updateOligo(updatedOligo))
+      }
+      catch{
+        dispatch(createNotification([`oligo ${content.sequence} was already deleted from server`,"error"]))
+        dispatch(deleteOligo({id:content.id}))
       }
     }
 }
