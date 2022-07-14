@@ -37,18 +37,22 @@ const Plasmids = ({user}) => {
 
     return (
         <div>
+          <div><span className="titleSection">Plasmids </span>
+          <span>
+            {user !== null &&
+            <Togglable buttonLabel="new plasmid" ref={plasmidFormRef}>
+                <AddPlasmidForm
+                createPlasmid={addPlasmid}
+                />
+            </Togglable>
+            }
+          </span>
+          </div>
         <ul>
             {plasmids.map(p => 
             <Plasmid key={p.id} plasmid={p} deletePlasmid={deletePlasmid} editPlasmid={editPlasmid} />
             )}
         </ul>
-        {user !== null &&
-          <Togglable buttonLabel="new plasmid" ref={plasmidFormRef}>
-              <AddPlasmidForm
-              createPlasmid={addPlasmid}
-              />
-          </Togglable>
-        }
         </div>
     )}
 

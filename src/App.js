@@ -34,13 +34,9 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      console.log(user.token)
       oligoService.setToken(user.token)
-      console.log(user.token)
       geneService.setToken(user.token)
-      console.log(user.token)
       plasmidService.setToken(user.token)
-      console.log(user.token)
     }
   }, [])
 
@@ -77,26 +73,35 @@ const App = () => {
   
 
   return (
-    <div>
-      {user !== null && <div>{user.name} logged-in <span><button onClick={()=>handleLogout()}>Log-out</button></span></div>}
-      <Notification message={errorMessage} />
-      {user === null && 
-      <Togglable buttonLabel='login'>
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-        />
-      </Togglable>
-      }
-      <h1>Oligos</h1>
-      <Oligos user={user} />
-      <h1>Genes</h1>
-      <Genes user={user} />
-      <h1>Plasmids</h1>
-      <Plasmids user={user} /> 
+    <div className="container">
+      <div className="row">
+        {user !== null && <div>{user.name} logged-in <span><button onClick={()=>handleLogout()}>Log-out</button></span></div>}
+        {user === null && 
+        <Togglable buttonLabel='login'>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
+        }
+      </div>
+      <div className="row">
+        <Notification message={errorMessage} />
+      </div>
+      <div className="row">
+        <div className="col-4">
+          <Oligos user={user} />
+        </div>
+        <div className="col-4">
+          <Genes user={user} />
+        </div>
+        <div className="col-4">
+          <Plasmids user={user} /> 
+        </div>
+      </div>
     </div>
   )
 }

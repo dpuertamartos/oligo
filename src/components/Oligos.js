@@ -81,6 +81,18 @@ const Oligos = ({user}) => {
 
     return (
         <div>
+          <div><span className="titleSection">Oligos </span>
+          <span>
+              {user !== null &&
+              <Togglable buttonLabel="new oligo" ref={oligoFormRef}>
+                  <AddOligoForm
+                  createOligo={addOligo}
+                  />
+              </Togglable>
+              }
+            </span>
+          </div>
+        
         <Filter ipValue={newSearch[0]} ipOnChange={handleSearchChange1}/>
         <button onClick={() => handleFilterChange("sequence")}>
             {filterType.includes("sequence") ? 'seq filter ON' : 'seq filter OFF'}
@@ -98,13 +110,6 @@ const Oligos = ({user}) => {
             <Oligo key={oligo.id} oligo={oligo} editOligo={updateOligo} deleteOligo={deleteOligo} />
             )}
         </ul>
-        {user !== null &&
-        <Togglable buttonLabel="new oligo" ref={oligoFormRef}>
-            <AddOligoForm
-            createOligo={addOligo}
-            />
-        </Togglable>
-        }
         </div>
     )}
 

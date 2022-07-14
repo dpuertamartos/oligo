@@ -34,18 +34,22 @@ const Genes = ({user}) => {
 
     return (
         <div>
+          <div><span className="titleSection">Genes </span>
+          <span>
+            {user !== null &&
+              <Togglable buttonLabel="new gene" ref={geneFormRef}>
+                  <AddGeneForm
+                  createGene={addGene}
+                  />
+              </Togglable>
+            }
+            </span>
+          </div>
         <ul>
             {genes.map(gene => 
             <Gene key={gene.id} gene={gene} deleteGene={deleteGene} editGene={updateGene} />
             )}
         </ul>
-        {user !== null &&
-            <Togglable buttonLabel="new gene" ref={geneFormRef}>
-                <AddGeneForm
-                createGene={addGene}
-                />
-            </Togglable>
-        }
         </div>
     )}
 
