@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import Plasmid from './Plasmid'
 import Togglable from './Togglable'
 import AddPlasmidForm from './AddPlasmidForm'
-import { createPlasmid } from '../reducers/plasmidReducer'
+import { createPlasmid, removePlasmid, updatePlasmid } from '../reducers/plasmidReducer'
 import { createNotification } from '../reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -19,30 +19,17 @@ const Plasmids = ({user}) => {
   }
 
     const deletePlasmid = id => {
-      console.log("editing plasmid",id)
-      /* const plasmid = plasmids.find(o => o.id === id)
+      const plasmid = plasmids.find(o => o.id === id)
       if(window.confirm(`do you want delete plasmid with ID: ${id} and name: ${plasmid.name}?`)){
-        plasmidService
-          .remove(id)
-          .then(()=>{
-            setPlasmids(plasmids.filter(n => n.id !== id))
-            setErrorMessage(
-              [`plasmid ${plasmid.name} was deleted from server`,"confirmation"]
-            )
-          })
-          .catch(error => {
-            setErrorMessage(
-              [`plasmid ${plasmid.name} was already deleted from server`,"error"]
-            )
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 5000)
-            setPlasmids(plasmids.filter(n=>n.id !== id))
-          })
-      } */
+        dispatch(removePlasmid(id))
+      } 
     }
     
-    const editPlasmid = (id, edit) => console.log("editing plasmid",id,edit)
+    const editPlasmid = (id, edit) => {
+      console.log("editing", id)
+      const plasmid = plasmids.find(o=>o.id===id)
+      dispatch(updatePlasmid({...plasmid, name:edit}))
+    }
 
     
     const plasmidFormRef = useRef()
@@ -52,7 +39,7 @@ const Plasmids = ({user}) => {
         <div>
         <ul>
             {plasmids.map(p => 
-            <Plasmid key={p.id} plasmid={p} deletePlasmid={deletePlasmid} editGene={editPlasmid} />
+            <Plasmid key={p.id} plasmid={p} deletePlasmid={deletePlasmid} editPlasmid={editPlasmid} />
             )}
         </ul>
         {user !== null &&

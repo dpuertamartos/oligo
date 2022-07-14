@@ -7,11 +7,11 @@ const plasmidSlice = createSlice({
   initialState: [],
   reducers: {
     editPlasmid(state, action) {
-        const id = action.data.id
+        const id = action.payload.id
         const plasmidToChange = state.find(n => n.id === id)
         const changedPlasmid = { 
             ...plasmidToChange, 
-            sequence: action.data.sequence
+            name: action.payload.name
         }
         return state.map(plasmid =>
             plasmid.id !== id ? plasmid : changedPlasmid
@@ -22,11 +22,15 @@ const plasmidSlice = createSlice({
     },
     setPlasmids(state, action) {
       return action.payload
+    },
+    deletePlasmid(state,action) {
+      const id = action.payload.id
+      return state.filter(plasmid => plasmid.id !== id)
     }
   },
 })
 
-export const { editPlasmid, appendPlasmid, setPlasmids } = plasmidSlice.actions
+export const { editPlasmid, appendPlasmid, setPlasmids, deletePlasmid } = plasmidSlice.actions
 
 export const initializePlasmids = () => {
     return async dispatch => {
@@ -41,6 +45,33 @@ export const createPlasmid = content => {
       dispatch(appendPlasmid(newPlasmid))
       dispatch(createNotification([`plasmid ${newPlasmid.name} was added to server`,"confirmation"]))
     }
+}
+
+export const removePlasmid = id => {
+  return async dispatch => {
+    try{
+      const removed = await plasmidService.remove(id)
+      dispatch(deletePlasmid({id:id}))
+      dispatch(createNotification([`plasmid ${id} was deleted from server`,"confirmation"]))
+    }
+    catch{
+      dispatch(deletePlasmid({id:id}))
+      dispatch(createNotification([`plasmid ${id} was already deleted from server`,"error"]))
+    }
+  }
+}
+
+export const updatePlasmid = content => {
+  return async dispatch => {
+    try{
+      const updatedPlasmid= await plasmidService.update(content.id,content)
+      dispatch(editPlasmid(updatedPlasmid))
+    }
+    catch{
+      dispatch(createNotification([`plasmid ${content.name} was already deleted from server`,"error"]))
+      dispatch(editPlasmid({id:content.id}))
+    }
+  }
 }
 
 export default plasmidSlice.reducer
