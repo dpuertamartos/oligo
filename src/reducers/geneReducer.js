@@ -6,12 +6,12 @@ const geneSlice = createSlice({
   name: 'genes',
   initialState: [],
   reducers: {
-    editGene(state, action) {
-        const id = action.data.id
+    updateGene(state, action) {
+        const id = action.payload.id
         const geneToChange = state.find(n => n.id === id)
         const changedGene = { 
             ...geneToChange, 
-            sequence: action.data.sequence
+            name: action.payload.name
         }
         return state.map(gene =>
             gene.id !== id ? gene : changedGene
@@ -22,11 +22,15 @@ const geneSlice = createSlice({
     },
     setGenes(state, action) {
       return action.payload
+    },
+    deleteGene(state,action) {
+      const id = action.payload.id
+      return state.filter(gene => gene.id !== id)
     }
   },
 })
 
-export const { editGene, appendGene, setGenes } = geneSlice.actions
+export const { updateGene, appendGene, setGenes, deleteGene } = geneSlice.actions
 
 export const initializeGenes = () => {
     return async dispatch => {
@@ -41,6 +45,33 @@ export const createGene = content => {
       dispatch(appendGene(newGene))
       dispatch(createNotification([`gene ${newGene.name} was added to server`,"confirmation"]))
     }
+}
+export const removeGene = id => {
+  return async dispatch => {
+    try{
+      const removed = await geneService.remove(id)
+      dispatch(deleteGene({id:id}))
+      dispatch(createNotification([`gene ${id} was deleted from server`,"confirmation"]))
+    }
+    catch{
+      dispatch(deleteGene({id:id}))
+      dispatch(createNotification([`gene ${id} was already deleted from server`,"error"]))
+    }
+  }
+}
+
+export const editGene = content => {
+  return async dispatch => {
+    try{
+      const updatedGene = await geneService.update(content.id,content)
+      console.log(updatedGene,"updatedGene")
+      dispatch(updateGene(updatedGene))
+    }
+    catch{
+      dispatch(createNotification([`gene ${content.name} was already deleted from server`,"error"]))
+      dispatch(deleteGene({id:content.id}))
+    }
+  }
 }
 
 export default geneSlice.reducer

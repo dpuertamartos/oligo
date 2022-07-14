@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import Gene from './Gene'
 import AddGeneForm from './AddGeneForm'
 import Togglable from './Togglable'
-import { createGene } from '../reducers/geneReducer'
+import { createGene, removeGene, editGene } from '../reducers/geneReducer'
 import { createNotification } from '../reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -18,29 +18,16 @@ const Genes = ({user}) => {
     }
 
     const deleteGene = id => {
-        console.log("deleting gene", id)
-       /*  const gene = genes.find(o => o.id === id)
+        const gene = genes.find(o => o.id === id)
         if(window.confirm(`do you want delete gene with ID: ${id} and name: ${gene.name}?`)){
-          geneService
-            .remove(id)
-            .then(()=>{
-              setGenes(genes.filter(n => n.id !== id))
-              setErrorMessage(
-                [`gene ${gene.name} was deleted from server`,"confirmation"]
-              )
-            })
-            .catch(error => {
-              setErrorMessage(
-                [`gene ${gene.name} was already deleted from server`,"error"]
-              )
-              setTimeout(() => {
-                setErrorMessage(null)
-              }, 5000)
-              setGenes(genes.filter(n=>n.id !== id))
-            })
-        } */
-      }
-    const editGene = (id, edit) => console.log("editing gene",id,edit)
+          dispatch(removeGene(id))
+        }
+    } 
+     
+    const updateGene = (id, edit) => {
+      const gene = genes.find(o => o.id === id)
+      dispatch(editGene({...gene, name:edit}))
+    }
     
     const geneFormRef = useRef()
     const genesToShow = genes
@@ -49,7 +36,7 @@ const Genes = ({user}) => {
         <div>
         <ul>
             {genes.map(gene => 
-            <Gene key={gene.id} gene={gene} deleteGene={deleteGene} editGene={editGene} />
+            <Gene key={gene.id} gene={gene} deleteGene={deleteGene} editGene={updateGene} />
             )}
         </ul>
         {user !== null &&
