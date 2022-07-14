@@ -92,19 +92,38 @@ const Oligos = ({user}) => {
               }
             </span>
           </div>
-        
-        <Filter ipValue={newSearch[0]} ipOnChange={handleSearchChange1}/>
-        <button onClick={() => handleFilterChange("sequence")}>
-            {filterType.includes("sequence") ? 'seq filter ON' : 'seq filter OFF'}
-        </button>
-        <Filter ipValue={newSearch[1]} ipOnChange={handleSearchChange2}/>
-        <button onClick={() => handleFilterChange("gene")}>
-            {filterType.includes("gene") ? 'gene filter ON' : 'gene filter OFF'}
-        </button>
-        <Filter ipValue={newSearch[2]} ipOnChange={handleSearchChange3}/>
-        <button onClick={() => handleFilterChange("plasmid")}>
-            {filterType.includes("plasmid") ? 'plasmid filter ON' : 'plasmid filter OFF'}
-        </button>
+        <div className="container-fluid filterForm">
+          <div className ="row">
+              <div className="col">
+              <Filter ipValue={newSearch[0]} ipOnChange={handleSearchChange1}/>
+              </div>
+              <div className="col d-grid gap-2">
+              <button type="button" className={`btn${filterType.includes("sequence") ? "" : "-outline"}-success`} onClick={() => handleFilterChange("sequence")}>
+                  {filterType.includes("sequence") ? 'seq filter ON' : 'seq filter OFF'}
+              </button>   
+              </div>
+          </div>
+          <div className ="row">
+            <div className="col">
+            <Filter ipValue={newSearch[1]} ipOnChange={handleSearchChange2}/>  
+            </div>
+            <div className="col d-grid gap-2">
+            <button type="button" className={`btn${filterType.includes("gene") ? "" : "-outline"}-success`} onClick={() => handleFilterChange("gene")}>
+                {filterType.includes("gene") ? 'gene filter ON' : 'gene filter OFF'}
+            </button>  
+            </div>
+          </div>
+          <div className ="row">
+            <div className="col">
+              <Filter ipValue={newSearch[2]} ipOnChange={handleSearchChange3}/>
+            </div>
+            <div className="col d-grid gap-2">
+              <button type="button" className={`btn${filterType.includes("plasmid") ? "" : "-outline"}-success`} onClick={() => handleFilterChange("plasmid")}>
+                {filterType.includes("plasmid") ? 'plasmid filter ON' : 'plasmid filter OFF'}
+              </button>
+            </div>
+          </div>
+        </div>
         <ul>
             {oligosToShow.map(oligo => 
             <Oligo key={oligo.id} oligo={oligo} editOligo={updateOligo} deleteOligo={deleteOligo} />
