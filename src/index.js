@@ -8,6 +8,7 @@ import oligoReducer from './reducers/oligoReducer'
 import geneReducer from './reducers/geneReducer'
 import plasmidReducer from './reducers/plasmidReducer'
 import notificationReducer from './reducers/notificationReducer'
+import filterReducer from './reducers/filterReducer'
 
 
 const store = configureStore({
@@ -15,7 +16,8 @@ const store = configureStore({
     oligos: oligoReducer,
     genes: geneReducer,
     plasmids: plasmidReducer,
-    notification: notificationReducer
+    notification: notificationReducer,
+    filter: filterReducer
   }
 })
 
