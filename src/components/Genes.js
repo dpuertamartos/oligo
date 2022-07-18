@@ -4,7 +4,7 @@ import Gene from './Gene'
 import AddGeneForm from './AddGeneForm'
 import Togglable from './Togglable'
 import { createGene, removeGene, editGene } from '../reducers/geneReducer'
-import { createNotification } from '../reducers/notificationReducer'
+import Superfilter from './Superfilter'
 import { useSelector, useDispatch } from 'react-redux'
 
 const Genes = ({user}) => {
@@ -45,6 +45,7 @@ const Genes = ({user}) => {
             }
             </span>
           </div>
+        <Superfilter />
         <ul>
             {genes.map(gene => 
             <Gene key={gene.id} gene={gene} deleteGene={deleteGene} editGene={updateGene} />

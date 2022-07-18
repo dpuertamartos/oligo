@@ -4,7 +4,7 @@ import Plasmid from './Plasmid'
 import Togglable from './Togglable'
 import AddPlasmidForm from './AddPlasmidForm'
 import { createPlasmid, removePlasmid, updatePlasmid } from '../reducers/plasmidReducer'
-import { createNotification } from '../reducers/notificationReducer'
+import Superfilter from './Superfilter'
 import { useSelector, useDispatch } from 'react-redux'
 
 const Plasmids = ({user}) => {
@@ -48,6 +48,7 @@ const Plasmids = ({user}) => {
             }
           </span>
           </div>
+        <Superfilter />
         <ul>
             {plasmids.map(p => 
             <Plasmid key={p.id} plasmid={p} deletePlasmid={deletePlasmid} editPlasmid={editPlasmid} />
