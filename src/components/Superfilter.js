@@ -1,12 +1,12 @@
 import React from 'react'
 import Filter from './Filter'
-import { appendType, deleteType, changeSearch } from '../reducers/filterReducer'
+import { appendTypeOligo, deleteTypeOligo, changeSearchOligo,
+  appendTypeGene, deleteTypeGene, changeSearchGene,
+  appendTypePlasmid, deleteTypePlasmid, changeSearchPlasmid } from '../reducers/filterReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
-const Superfilter = () => {
+const Superfilter = ({filterstate, appendType, deleteType, changeSearch}) => {
     const dispatch = useDispatch()
-    const filterstate = useSelector(state => state.filter)
-    
     
     const handleFilterChange = (key) => {
       if(filterstate.type.includes(key)){

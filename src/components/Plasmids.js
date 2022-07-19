@@ -6,10 +6,12 @@ import AddPlasmidForm from './AddPlasmidForm'
 import { createPlasmid, removePlasmid, updatePlasmid } from '../reducers/plasmidReducer'
 import Superfilter from './Superfilter'
 import { useSelector, useDispatch } from 'react-redux'
+import { appendTypePlasmid, deleteTypePlasmid, changeSearchPlasmid } from '../reducers/filterReducer'
 
 const Plasmids = ({user}) => {
   const dispatch = useDispatch()
   const plasmids = useSelector(state => state.plasmids)
+  const filterstate = useSelector(state => state.filter.plasmids)
   
   const addPlasmid = (plasmidObject) => {
       plasmidFormRef.current.toggleVisibility()
@@ -48,7 +50,8 @@ const Plasmids = ({user}) => {
             }
           </span>
           </div>
-        <Superfilter />
+        <Superfilter filterstate={filterstate} appendType={appendTypePlasmid} 
+        deleteType={deleteTypePlasmid} changeSearch={changeSearchPlasmid}/>
         <ul>
             {plasmids.map(p => 
             <Plasmid key={p.id} plasmid={p} deletePlasmid={deletePlasmid} editPlasmid={editPlasmid} />

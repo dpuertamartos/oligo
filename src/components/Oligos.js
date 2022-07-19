@@ -6,12 +6,13 @@ import AddOligoForm from './AddOligoForm'
 import Superfilter from './Superfilter'
 import filter from '../logic/filter'
 import { createOligo, removeOligo, editOligo } from '../reducers/oligoReducer'
+import { appendTypeOligo, deleteTypeOligo, changeSearchOligo } from '../reducers/filterReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
 const Oligos = ({user}) => {
     const dispatch = useDispatch()
     const oligos = useSelector(state => state.oligos)
-    const filterstate = useSelector(state => state.filter)
+    const filterstate = useSelector(state => state.filter.oligos)
     
     const addOligo = (oligoObject) => {
       oligoFormRef.current.toggleVisibility()
@@ -51,7 +52,8 @@ const Oligos = ({user}) => {
               }
             </span>
           </div>
-        <Superfilter />
+        <Superfilter filterstate={filterstate} appendType={appendTypeOligo} 
+        deleteType={deleteTypeOligo} changeSearch={changeSearchOligo}/>
         <ul>
             {oligosToShow.map(oligo => 
             <Oligo key={oligo.id} oligo={oligo} editOligo={updateOligo} deleteOligo={deleteOligo} />

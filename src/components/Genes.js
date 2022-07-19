@@ -6,10 +6,12 @@ import Togglable from './Togglable'
 import { createGene, removeGene, editGene } from '../reducers/geneReducer'
 import Superfilter from './Superfilter'
 import { useSelector, useDispatch } from 'react-redux'
+import { appendTypeGene, deleteTypeGene, changeSearchGene } from '../reducers/filterReducer'
 
 const Genes = ({user}) => {
     const dispatch = useDispatch()
     const genes = useSelector(state => state.genes)
+    const filterstate = useSelector(state => state.filter.genes)
     
     const addGene = (geneObject) => {
         geneFormRef.current.toggleVisibility()
@@ -45,7 +47,8 @@ const Genes = ({user}) => {
             }
             </span>
           </div>
-        <Superfilter />
+        <Superfilter filterstate={filterstate} appendType={appendTypeGene} 
+        deleteType={deleteTypeGene} changeSearch={changeSearchGene}/>
         <ul>
             {genes.map(gene => 
             <Gene key={gene.id} gene={gene} deleteGene={deleteGene} editGene={updateGene} />
