@@ -1,8 +1,5 @@
 import React from 'react'
 import Filter from './Filter'
-import { appendTypeOligo, deleteTypeOligo, changeSearchOligo,
-  appendTypeGene, deleteTypeGene, changeSearchGene,
-  appendTypePlasmid, deleteTypePlasmid, changeSearchPlasmid } from '../reducers/filterReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
 const Superfilter = ({filterstate, appendType, deleteType, changeSearch}) => {
