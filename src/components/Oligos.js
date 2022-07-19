@@ -54,11 +54,11 @@ const Oligos = ({user}) => {
           </div>
         <Superfilter filterstate={filterstate} appendType={appendTypeOligo} 
         deleteType={deleteTypeOligo} changeSearch={changeSearchOligo}/>
-        <ul>
+        <div>
             {oligosToShow.map(oligo => 
             <Oligo key={oligo.id} oligo={oligo} editOligo={updateOligo} deleteOligo={deleteOligo} />
             )}
-        </ul>
+        </div>
         </div>
     )}
 
