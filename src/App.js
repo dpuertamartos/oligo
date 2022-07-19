@@ -14,6 +14,7 @@ import { initializeOligos } from './reducers/oligoReducer'
 import { initializeGenes } from './reducers/geneReducer'
 import { initializePlasmids } from './reducers/plasmidReducer'
 import { createNotification } from './reducers/notificationReducer'
+import ReactSequenceViewer from 'react-sequence-viewer';
 
 
 const App = () => {
@@ -90,6 +91,12 @@ const App = () => {
       </div>
       <div className="row">
         <Notification message={errorMessage} />
+      </div>
+      <div className="row">
+        <ReactSequenceViewer id={"1"} sequence={"AATTGG"} />
+      </div>
+      <div className="row">
+        <ReactSequenceViewer id={"2"} sequence={"AATTGGgg"} />
       </div>
       <div className="row">
         <div className="col-4">

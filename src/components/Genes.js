@@ -49,11 +49,11 @@ const Genes = ({user}) => {
           </div>
         <Superfilter filterstate={filterstate} appendType={appendTypeGene} 
         deleteType={deleteTypeGene} changeSearch={changeSearchGene}/>
-        <ul>
+        <div>
             {genes.map(gene => 
             <Gene key={gene.id} gene={gene} deleteGene={deleteGene} editGene={updateGene} />
             )}
-        </ul>
+        </div>
         </div>
     )}
 

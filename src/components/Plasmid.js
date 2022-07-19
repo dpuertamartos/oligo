@@ -16,7 +16,7 @@ const Plasmid = ({plasmid, editPlasmid, deletePlasmid}) => {
     }
 
     return(
-        <li>{plasmid.name}<button onClick={()=>setNewShowEdit(!showEdit)}>EDIT</button><button onClick={()=>deletePlasmid(plasmid.id)}>DELETE</button>
+        <li>{plasmid.name}<button type="button" className="btn btn-outline-primary" onClick={()=>setNewShowEdit(!showEdit)}>EDIT</button><button type="button" className="btn btn-outline-danger" onClick={()=>deletePlasmid(plasmid.id)}>DELETE</button>
             {showEdit 
                 ? <EditForm onSubmit={changePlasmid} ipValue={newEdit} ipOnChange={handleEditChange} /> 
                 : <span></span> }
